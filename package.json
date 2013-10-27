@@ -1,0 +1,41 @@
+{
+  "name": "trojan",
+  "description": "Package your source and dependencies in 1 file for easy distribution",
+  "version": "0.0.1",
+  "homepage": "https://github.com/mattinsler/trojan",
+  "author": {
+    "name": "Matt Insler",
+    "email": "matt.insler@gmail.com",
+    "url": "http://www.mattinsler.com"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/mattinsler/trojan.git"
+  },
+  "bugs": {
+    "url": "https://github.com/mattinsler/trojan/issues"
+  },
+  "licenses": [
+    {
+      "type": "MIT",
+      "url": "https://github.com/mattinsler/trojan/blob/master/LICENSE-MIT"
+    }
+  ],
+  "main": "lib/trojan",
+  "bin": {
+    "trojan": "./bin/trojan"
+  },
+  "engines": {
+    "node": ">= 0.8.0"
+  },
+  "dependencies": {
+    "coffee-script": "~1.6.3",
+    "shelljs": "~0.2.6"
+  },
+  "devDependencies": {
+    "grunt": "~0.4.1",
+    "grunt-contrib-coffee": "~0.7.0",
+    "grunt-contrib-clean": "~0.5.0"
+  },
+  "keywords": []
+}
