@@ -4,13 +4,16 @@ shell = require 'shelljs'
 coffee = require 'coffee-script'
 Builder = require './builder'
 
-horse_source = fs.readFileSync(path.join(__dirname, 'horse.coffee')).toString()
+horse_source = fs.readFileSync(path.join(__dirname, '..', 'lib', 'horse.coffee')).toString()
 
 class PackageBuilder
   constructor: (@root) ->
     @root = path.resolve(@root)
   
   build: ->
+    throw new Error(@root + ' is not a valid directory') unless fs.existsSync(@root)
+    throw new Error(@root + ' is not a valid directory') unless fs.statSync(@root).isDirectory()
+    
     target_root = @root + '-trojan'
   
     shell.rm('-rf', target_root)
@@ -41,3 +44,5 @@ class PackageBuilder
     shell.rm('-rf', shell.ls('*').filter((f) -> f not in ['index.js', 'package.json']))
     
     target_root
+
+module.exports = PackageBuilder

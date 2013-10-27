@@ -21,7 +21,7 @@
       "url": "https://github.com/mattinsler/trojan/blob/master/LICENSE-MIT"
     }
   ],
-  "main": "lib/trojan",
+  "main": "dist/trojan",
   "bin": {
     "trojan": "./bin/trojan"
   },
@@ -30,7 +30,8 @@
   },
   "dependencies": {
     "coffee-script": "~1.6.3",
-    "shelljs": "~0.2.6"
+    "shelljs": "~0.2.6",
+    "nopt": "~2.1.2"
   },
   "devDependencies": {
     "grunt": "~0.4.1",

@@ -1,53 +1,37 @@
 #!/usr/bin/env node
 
-console.log('NOT READY YET');
-
-process.exit()
-
 var nopt = require('nopt')
-  , compiler = require('../');
+  , trojan = require('../');
 
-var parsed = nopt({
-  'append-platform': Boolean,
-  help: Boolean,
-  ignore: [String, Array],
-  node: String,
-  output: String,
-  'print-opts': Boolean,
-  root: String,
-  version: Boolean
-}, {
-  a: ['--append-platform'],
-  h: ['--help'],
-  i: ['--ignore'],
-  n: ['--node'],
-  o: ['--output'],
-  r: ['--root'],
-  v: ['--version']
-}, process.argv);
-
-if (parsed.help) {
+var usage = function() {
   var pkg = require('../package.json');
   
   console.log([
   '',
-  '  === Compiler v' + pkg.version + ' ===',
+  '  === Trojan v' + pkg.version + ' ===',
   '',
-  'Usage: ' + Object.keys(pkg.bin)[0] + ' [options]',
+  'Usage: ' + Object.keys(pkg.bin)[0] + ' [options] root-dir',
   '',
   'Options:',
   '',
-  '  -a,--append-platform=BOOL Append platform info to the output filename (default: true)',
   '  -h,--help                 Print this help menu',
-  '  -i,--ignore FILE_LIST     File ignore list (default: node_modules,test)',
-  '  -n,--node VERSION         Node.js version (default: 0.10.18)',
-  '  -o,--output FILENAME      Output filename',
-  '  --print-opts=BOOL         Print options to be used by compiler and exit',
-  '  -r,--root DIRECTORY       Root directory of project to compile (default: current directory)',
   '  -v,--version              Print the version and exit',
   ''
   ].join('\n'));
+  
   process.exit(1);
+};
+
+var parsed = nopt({
+  help: Boolean,
+  version: Boolean
+}, {
+  h: ['--help'],
+  v: ['--version']
+}, process.argv);
+
+if (parsed.help) {
+  usage();
 }
 
 if (parsed.version) {
@@ -55,11 +39,12 @@ if (parsed.version) {
   process.exit();
 }
 
-delete parsed.argv;
-compiler(parsed, function(err, output) {
-  if (err) {
-    console.log(err.stack);
-    process.exit(1);
-  }
-  console.log('Created', output);
-});
+if (parsed.argv.remain.length !== 1) usage();
+
+try {
+  var new_path = trojan.create_package(parsed.argv.remain[0]);
+  console.log('\nSUCCESS: Created', new_path, '\n');
+} catch (err) {
+  console.error('\nERROR:', err.message);
+  usage();
+}
