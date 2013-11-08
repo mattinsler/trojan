@@ -4,7 +4,9 @@ shell = require 'shelljs'
 coffee = require 'coffee-script'
 Builder = require './builder'
 
-horse_source = fs.readFileSync(path.join(__dirname, '..', 'lib', 'horse.coffee')).toString()
+files =
+  'horse.js': coffee.compile(fs.readFileSync(path.join(__dirname, 'horse.coffee'), 'utf8'), bare: true)
+  'bulkhead.js': coffee.compile(fs.readFileSync(path.join(__dirname, 'bulkhead.coffee'), 'utf8'), bare: true)
 
 class PackageBuilder
   constructor: (@root) ->
@@ -26,22 +28,29 @@ class PackageBuilder
     shell.exec('npm install --production')
   
     pkg = require(path.join(target_root, 'package.json'))
-    main = path.join(target_root, (pkg.main or 'index'))
+    main = pkg.main or 'index'
   
     builder = new Builder(target_root)
     source = builder.build()
-    data = horse_source.replace('Module.__packaged_source__ = {}', 'Module.__packaged_source__ = ' + JSON.stringify(source))
-    data = data.replace('module.exports = require(__filename)', 'module.exports = require("' + main + '")')
-    data = coffee.compile(data)
   
     pkg.dependencies = {}
     pkg.devDependencies = {}
-    pkg.main = 'index.js'
-  
-    fs.writeFileSync(path.join(target_root, 'index.js'), data)
+    pkg.main = '__trojan__/bootstrap.js'
+    
+    shell.mkdir('-p', path.join(target_root, '__trojan__'))
+    fs.writeFileSync(path.join(target_root, '__trojan__', k), v) for k, v of files
+    
+    fs.writeFileSync(path.join(target_root, '__trojan__', 'source_code.js'), 'module.exports = ' + JSON.stringify(source) + ';')
+    fs.writeFileSync(path.join(target_root, '__trojan__', 'bootstrap.js'), """
+    module.exports = require('./horse')(
+      require('path').dirname(__dirname),
+      require('./source_code'),
+      '#{main}'
+    );
+    """)
     fs.writeFileSync(path.join(target_root, 'package.json'), JSON.stringify(pkg, null, 2))
   
-    shell.rm('-rf', shell.ls('*').filter((f) -> f not in ['index.js', 'package.json']))
+    shell.rm('-rf', shell.ls('*').filter((f) -> f not in ['__trojan__', 'package.json']))
     
     target_root
 

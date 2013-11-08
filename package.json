@@ -21,7 +21,7 @@
       "url": "https://github.com/mattinsler/trojan/blob/master/LICENSE-MIT"
     }
   ],
-  "main": "dist/trojan",
+  "main": "index.js",
   "bin": {
     "trojan": "./bin/trojan"
   },
