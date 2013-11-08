@@ -1,7 +1,7 @@
 {
   "name": "trojan",
   "description": "Package your source and dependencies in 1 file for easy distribution",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "homepage": "https://github.com/mattinsler/trojan",
   "author": {
     "name": "Matt Insler",
@@ -32,11 +32,6 @@
     "coffee-script": "~1.6.3",
     "shelljs": "~0.2.6",
     "nopt": "~2.1.2"
-  },
-  "devDependencies": {
-    "grunt": "~0.4.1",
-    "grunt-contrib-coffee": "~0.7.0",
-    "grunt-contrib-clean": "~0.5.0"
   },
   "keywords": []
 }
