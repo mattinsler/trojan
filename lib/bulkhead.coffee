@@ -53,7 +53,7 @@ get_file = (filename) ->
   # console.log '------ GET FILE', filename
   o = get_file_ref(filename)
   res = {is_packaged: o?}
-  res.path = o.path if o.path?
+  res.path = o?.path if o?.path?
   res.file = o.tree[o.path] if o?.tree?[o.path]?
   # console.log '------ GET FILE', res
   res
