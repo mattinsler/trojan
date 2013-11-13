@@ -45,6 +45,7 @@ get_file_ref = (filename) ->
       max = i.root.length
       b = i
   {
+    root: b.root
     tree: Module.__trojan_source__[b.root]
     path: b.path
   }
@@ -53,6 +54,7 @@ get_file = (filename) ->
   # console.log '------ GET FILE', filename
   o = get_file_ref(filename)
   res = {is_packaged: o?}
+  res.root = o?.root
   res.path = o?.path if o?.path?
   res.file = o.tree[o.path] if o?.tree?[o.path]?
   # console.log '------ GET FILE', res
@@ -109,6 +111,19 @@ fs_stat_sync = (old_fn, filename) ->
   create_stats(o.file.stat)
 
 
+node_extension = (old_fn, module, filename) ->
+  o = get_file(filename)
+  return old_fn(module, filename) unless o.is_packaged and path.extname(filename) is '.node'
+  
+  tmp_root = path.join(o.root, '.tmp-trojan')
+  tmp_file_path = path.join(tmp_root, path.basename(filename))
+  
+  try
+    fs.mkdirSync(tmp_root)
+  catch err
+  fs.writeFileSync(tmp_file_path, fs.readFileSync(filename))
+  
+  old_fn(module, tmp_file_path)
 
 
 # instrument fs
@@ -130,3 +145,5 @@ wrap(fs, 'lstatSync', fs_stat_sync)
 wrap(fs, 'fstatSync', fs_stat_sync)
 wrap(fs, 'existsSync', fs_exists_sync)
 wrap(fs, 'readdirSync', fs_readdir_sync)
+
+wrap(Module._extensions, '.node', node_extension)

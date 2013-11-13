@@ -1,0 +1,17 @@
+{
+  "name": "example",
+  "version": "0.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "coffee-script": "~1.6.3",
+    "passport-local": "~0.1.6",
+    "passport": "~0.1.17",
+    "express": "~3.4.4",
+    "bcrypt": "~0.7.7",
+    "ejs": "~0.8.4"
+  }
+}
