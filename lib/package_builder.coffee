@@ -11,6 +11,7 @@ files =
 class PackageBuilder
   constructor: (@root, @opts = {}) ->
     @root = path.resolve(@root)
+    console.log @opts
   
   build: ->
     throw new Error(@root + ' is not a valid directory') unless fs.existsSync(@root)
@@ -29,6 +30,8 @@ class PackageBuilder
       base[0] isnt '.' and base isnt 'node_modules'
     shell.cp('-r', cp_files, target_root)
     
+    console.log @opts['use-modules']
+    process.exit()
     if @opts['use-modules'] is true
       shell.mkdir('-p', path.join(target_root, 'node_modules'))
       dep_files = Object.keys(pkg.dependencies).map((d) => path.join(@root, 'node_modules', d))
