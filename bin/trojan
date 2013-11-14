@@ -15,6 +15,7 @@ var usage = function() {
   'Options:',
   '',
   '  -h,--help                 Print this help menu',
+  '  -u,--use-modules          Use the current node_modules rather than installing',
   '  -v,--version              Print the version and exit',
   ''
   ].join('\n'));
@@ -24,9 +25,11 @@ var usage = function() {
 
 var parsed = nopt({
   help: Boolean,
+  'use-modules': Boolean,
   version: Boolean
 }, {
   h: ['--help'],
+  u: ['--use-modules'],
   v: ['--version']
 }, process.argv);
 
@@ -41,8 +44,11 @@ if (parsed.version) {
 
 if (parsed.argv.remain.length !== 1) usage();
 
+var root = parsed.argv.remain[0];
+delete parsed.argv;
+
 try {
-  var new_path = trojan.create_package(parsed.argv.remain[0]);
+  var new_path = trojan.create_package(root, parsed);
   console.log('\nSUCCESS: Created', new_path, '\n');
 } catch (err) {
   console.error('\nERROR:', err.message);
