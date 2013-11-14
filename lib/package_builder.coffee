@@ -37,8 +37,6 @@ class PackageBuilder
       shell.cd(target_root)
       shell.exec('npm install --production')
     
-    console.log 'HEY'
-    
     builder = new Builder(target_root)
     source = builder.build()
     
@@ -59,7 +57,7 @@ class PackageBuilder
     """)
     fs.writeFileSync(path.join(target_root, 'package.json'), JSON.stringify(pkg, null, 2))
     
-    shell.rm('-rf', shell.ls('*').filter((f) -> f not in ['__trojan__', 'package.json']))
+    shell.rm('-rf', shell.ls(path.join(target_root, '*')).filter((f) -> f not in ['__trojan__', 'package.json']))
     
     target_root
 
