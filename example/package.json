@@ -2,6 +2,7 @@
   "name": "example",
   "version": "0.0.0",
   "description": "",
+  "bin": "bin/example",
   "main": "server.js",
   "scripts": {
     "start": "node server.js"
